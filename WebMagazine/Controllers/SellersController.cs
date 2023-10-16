@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging.Signing;
 using WebMagazine.Data;
 using WebMagazine.Models;
 using WebMagazine.Models.ViewModels;
@@ -64,5 +65,42 @@ namespace WebMagazine.Controllers
             
             return View(seller);
         }
+
+        public IActionResult Edit(int id)
+        {
+            //Verificar se existe um vendedor com
+            //    esse ID no banco de dados
+            var seller = _context.Seller.FirstOrDefault(s => s.Id == id);
+            //Verifica se foi encontrado um objeto
+            //vendedor com o id passado na url
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            //Cria uma lista de departamentos
+            List<Department> departments = _context.Department.ToList();
+
+            //Cria uma instância do viewmodel
+            SellerFormViewModel viewModel = new SellerFormViewModel();
+            viewModel.Departments = departments;
+            viewModel.Seller = seller;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Seller seller) { 
+            //VerificationAllowListEntry se 
+            //    foi passado um objeto 
+            if (seller == null)
+            {
+                return NotFound();
+            }
+            _context.Update(seller);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
     }
 }

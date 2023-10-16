@@ -1,8 +1,14 @@
-﻿namespace WebMagazine.Models
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace WebMagazine.Models
 {
     public class Department
     {
+
         public int Id { get; set; }
+        [Display(Name="Nome do Departamento")]
+        [Required]
         public string Name { get; set; }
         public string Abbreviation { get; set; } 
 
