@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
 using WebMagazine.Data;
 using WebMagazine.Models;
@@ -16,7 +17,7 @@ namespace WebMagazine.Controllers
 
         public IActionResult Index()
         {
-            var sellers = _context.Seller.ToList();
+            var sellers = _context.Seller.Include("Department").ToList();
             return View(sellers);
         }
 
@@ -57,7 +58,7 @@ namespace WebMagazine.Controllers
         {
             //Verificar se existe um vendedor com
             //    esse ID no banco de dados
-            var seller = _context.Seller.FirstOrDefault(s => s.Id == id);
+            var seller = _context.Seller.Include("Department").FirstOrDefault(s => s.Id == id);
 
             if (seller == null) { 
                 return NotFound();
@@ -102,5 +103,30 @@ namespace WebMagazine.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Delete(int? id)
+        {
+            if (id == null) { 
+                return NotFound();
+            }
+            //Busca o vendedor no banco de dados
+            var seller = _context.Seller.Include("Department").FirstOrDefault(s => s.Id == id);
+            //Verifica se o vendedor existe
+            if (seller == null) { 
+                return NotFound();
+            }
+            return View(seller);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id) {
+            var seller = _context.Seller.FirstOrDefault(s => s.Id == id); 
+            if (seller == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(seller);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

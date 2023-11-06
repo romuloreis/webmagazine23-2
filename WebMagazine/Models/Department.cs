@@ -7,7 +7,7 @@ namespace WebMagazine.Models
     {
 
         public int Id { get; set; }
-        [Display(Name="Nome do Departamento")]
+        [Display(Name="Department Name")]
         [Required]
         public string Name { get; set; }
         public string Abbreviation { get; set; } 
