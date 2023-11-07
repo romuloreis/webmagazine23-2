@@ -18,7 +18,27 @@ namespace WebMagazine.Controllers
         public IActionResult Index()
         {
             var sellers = _context.Seller.Include("Department").ToList();
-            return View(sellers);
+
+            //Soma o salário de todos os vendedores
+            ViewData["CustoRH"] = sellers.Sum(s => s.Salary);
+            //Maior salário de todos os vendedores
+            ViewData["Maior"] = sellers.Max(s => s.Salary);
+            //Menor salário de todos os vendedores
+            ViewData["Menor"] = sellers.Min(s => s.Salary);
+            //Média salarial de todos os vendedores
+            ViewData["Media"] = sellers.Average(s => s.Salary);
+            //Conta quantos vendedores ganham bem
+            ViewData["Ricos"] = sellers.Count(s => s.Salary >= 30000);
+            //Filtra os vendedores com salário abaixo de 20k
+            var poorSellers = sellers.Where(s => s.Salary < 20000).ToArray();
+
+            var sellerAscNameSalary = sellers
+                //.Where(s => s.Salary > 1000)
+                .OrderBy(s => s.Name)
+                .ThenBy(s => s.Salary);
+
+            return View(sellerAscNameSalary);
+
         }
 
         public IActionResult Create() {

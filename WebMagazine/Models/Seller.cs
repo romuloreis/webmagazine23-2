@@ -17,6 +17,7 @@ namespace WebMagazine.Models
         [Display(Name="Birth Date")]
         [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:#,##0.00}")]
         [DataType(DataType.Currency)]
         public double Salary { get; set; }
 

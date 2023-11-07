@@ -54,6 +54,16 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
-    </tbody>
+}    </tbody>
+
+    <h3>Soma do salário dos vendedores:</h3>
+    <p>R$ @ViewData["CustoRH"]</p>
+    <h3>Maior salário entre os vendedores:</h3>
+    <p>R$ @ViewData["Maior"]</p>
+    <h3>Menor salário entre os vendedores:</h3>
+    <p>R$ @ViewData["Menor"]</p>
+    <h3>Média salarial entre os vendedores:</h3>
+    <p>R$ @ViewData["Media"]</p>
+    <h3>Números de vendedores bem pagos:</h3>
+    <p>@ViewData["Ricos"]</p>
 </table>
