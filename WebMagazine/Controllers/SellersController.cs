@@ -78,12 +78,22 @@ namespace WebMagazine.Controllers
         {
             //Verificar se existe um vendedor com
             //    esse ID no banco de dados
-            var seller = _context.Seller.Include("Department").FirstOrDefault(s => s.Id == id);
+            var seller = _context.Seller
+                .Include("Department")
+                .FirstOrDefault(s => s.Id == id);
 
             if (seller == null) { 
                 return NotFound();
-            }     
-            
+            }
+
+            seller.Sales = _context.SalesRecord.Where(sr => sr.SellerId == id).ToArray();
+
+            //ano, mês, dia
+            DateTime initial = new DateTime(2023, 09, 01);
+            DateTime final = DateTime.Now;
+            ViewData["total"] = seller.TotalSales(initial, final);
+            //ViewData["total"] = seller.TotalSales(
+            //        new DateTime(2023, 09, 01), DateTime.Now);
             return View(seller);
         }
 
