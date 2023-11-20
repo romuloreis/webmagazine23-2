@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging.Signing;
 using WebMagazine.Data;
 using WebMagazine.Models;
 using WebMagazine.Models.ViewModels;
@@ -11,7 +10,8 @@ namespace WebMagazine.Controllers
     {
         private readonly WebMagazineContext _context;
 
-        public SellersController(WebMagazineContext context) { 
+        public SellersController(WebMagazineContext context)
+        {
             _context = context;
         }
 
@@ -41,7 +41,8 @@ namespace WebMagazine.Controllers
 
         }
 
-        public IActionResult Create() {
+        public IActionResult Create()
+        {
             //Cria uma instância do SellerFormViewModel,
             //que vai ter duas
             //propriedades, a primeira é a lista de departamentos
@@ -57,7 +58,7 @@ namespace WebMagazine.Controllers
         {
             /*Teste se foi passado um objeto vendedor*/
             if (seller == null)
-            {   
+            {
                 /*Retorna não encontrado se não for 
                  passado um objeto vendedor*/
                 return NotFound();
@@ -82,11 +83,13 @@ namespace WebMagazine.Controllers
                 .Include("Department")
                 .FirstOrDefault(s => s.Id == id);
 
-            if (seller == null) { 
+            if (seller == null)
+            {
                 return NotFound();
             }
 
-            seller.Sales = _context.SalesRecord.Where(sr => sr.SellerId == id).ToArray();
+            seller.Sales = _context.SalesRecord
+                .Where(sr => sr.SellerId == id).ToArray();
 
             //ano, mês, dia
             DateTime initial = new DateTime(2023, 09, 01);
@@ -121,7 +124,8 @@ namespace WebMagazine.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Seller seller) { 
+        public IActionResult Edit(Seller seller)
+        {
             //VerificationAllowListEntry se 
             //    foi passado um objeto 
             if (seller == null)
@@ -135,21 +139,24 @@ namespace WebMagazine.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if (id == null) { 
+            if (id == null)
+            {
                 return NotFound();
             }
             //Busca o vendedor no banco de dados
             var seller = _context.Seller.Include("Department").FirstOrDefault(s => s.Id == id);
             //Verifica se o vendedor existe
-            if (seller == null) { 
+            if (seller == null)
+            {
                 return NotFound();
             }
             return View(seller);
         }
 
         [HttpPost]
-        public IActionResult Delete(int id) {
-            var seller = _context.Seller.FirstOrDefault(s => s.Id == id); 
+        public IActionResult Delete(int id)
+        {
+            var seller = _context.Seller.FirstOrDefault(s => s.Id == id);
             if (seller == null)
             {
                 return NotFound();

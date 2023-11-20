@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebMagazine.Models;
 
 namespace WebMagazine.Data
 {
     public class WebMagazineContext : DbContext
     {
-        public WebMagazineContext (DbContextOptions<WebMagazineContext> options)
+        public WebMagazineContext(DbContextOptions<WebMagazineContext> options)
             : base(options)
         {
         }

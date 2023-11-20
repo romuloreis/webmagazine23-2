@@ -106,7 +106,7 @@ namespace WebMagazine.Migrations
             modelBuilder.Entity("WebMagazine.Models.SalesRecord", b =>
                 {
                     b.HasOne("WebMagazine.Models.Seller", "Seller")
-                        .WithMany()
+                        .WithMany("Sales")
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -123,6 +123,11 @@ namespace WebMagazine.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("WebMagazine.Models.Seller", b =>
+                {
+                    b.Navigation("Sales");
                 });
 #pragma warning restore 612, 618
         }

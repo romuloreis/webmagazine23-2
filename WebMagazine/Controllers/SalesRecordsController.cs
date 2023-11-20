@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebMagazine.Data;
 using WebMagazine.Models;
+using WebMagazine.Models.ViewModels;
 
 namespace WebMagazine.Controllers
 {
@@ -48,25 +45,25 @@ namespace WebMagazine.Controllers
         // GET: SalesRecords/Create
         public IActionResult Create()
         {
-            ViewData["SellerId"] = new SelectList(_context.Seller, "Id", "Email");
-            return View();
+            //propriedades, a primeira é a lista de vendedores
+            var viewModel = new SalesRecordFormViewModel();
+            //Carrega os vendedores do banco
+            viewModel.Sellers = _context.Seller.ToList();
+            return View(viewModel);
         }
 
         // POST: SalesRecords/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Date,Price,Status,SellerId")] SalesRecord salesRecord)
+        //[ValidateAntiForgeryToken]
+        public IActionResult Create(SalesRecordFormViewModel salesRecordFormViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(salesRecord);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["SellerId"] = new SelectList(_context.Seller, "Id", "Email", salesRecord.SellerId);
-            return View(salesRecord);
+           
+            _context.Add(salesRecordFormViewModel.SalesRecord);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: SalesRecords/Edit/5
@@ -155,14 +152,14 @@ namespace WebMagazine.Controllers
             {
                 _context.SalesRecord.Remove(salesRecord);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SalesRecordExists(int id)
         {
-          return (_context.SalesRecord?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.SalesRecord?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

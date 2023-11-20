@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebMagazine.Models
 {
@@ -7,18 +6,19 @@ namespace WebMagazine.Models
     {
 
         public int Id { get; set; }
-        [Display(Name="Department Name")]
+        [Display(Name = "Department Name")]
         [Required]
         public string Name { get; set; }
-        public string Abbreviation { get; set; } 
+        public string Abbreviation { get; set; }
 
         /*Define uma relação com vendedores (Seller)*/
-        ICollection <Seller> Sellers { get; set; } =
+        ICollection<Seller> Sellers { get; set; } =
             new List<Seller>();
 
         public double TotalSales(DateTime initial,
-            DateTime final){
-            return Sellers.Sum(seller => 
+            DateTime final)
+        {
+            return Sellers.Sum(seller =>
                 seller.TotalSales(initial, final));
         }
 
