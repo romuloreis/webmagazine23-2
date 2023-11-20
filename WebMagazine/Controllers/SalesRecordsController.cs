@@ -79,8 +79,14 @@ namespace WebMagazine.Controllers
             {
                 return NotFound();
             }
-            ViewData["SellerId"] = new SelectList(_context.Seller, "Id", "Email", salesRecord.SellerId);
-            return View(salesRecord);
+
+            //propriedades, a primeira é a lista de vendedores
+            var viewModel = new SalesRecordFormViewModel();
+            //popula com o sale record que se deseja editar
+            viewModel.SalesRecord = salesRecord;
+            //Carrega os vendedores do banco
+            viewModel.Sellers = _context.Seller.ToList();
+            return View(viewModel);
         }
 
         // POST: SalesRecords/Edit/5
@@ -95,28 +101,24 @@ namespace WebMagazine.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(salesRecord);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SalesRecordExists(salesRecord.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(salesRecord);
+                await _context.SaveChangesAsync();
             }
-            ViewData["SellerId"] = new SelectList(_context.Seller, "Id", "Email", salesRecord.SellerId);
-            return View(salesRecord);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SalesRecordExists(salesRecord.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        
         }
 
         // GET: SalesRecords/Delete/5
